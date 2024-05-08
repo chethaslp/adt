@@ -1,9 +1,8 @@
 "use client";
 import React from 'react';
 import { onAuthStateChanged, User, getAuth } from 'firebase/auth';
-import { apiKey, app } from '@/components/fb/config';
+import { apiKey, app, clientId } from '@/components/fb/config';
 import Loading from '@/app/loading';
-import keys from '@/keys.json'
 import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { GenericConverter, User as UserDt } from '@/lib/models';
 
@@ -24,7 +23,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode} )
             gapi.load('client:auth2', async ()=>{
                 gapi.client.init({
                 apiKey: apiKey,
-                clientId: keys.web.client_id,
+                clientId: clientId,
                 scope: "https://www.googleapis.com/auth/spreadsheets"
                 }).then(()=> gapi.auth.init(()=> resolve(gapi)))
                 .catch((err)=> reject(err))

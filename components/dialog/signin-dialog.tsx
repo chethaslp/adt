@@ -27,7 +27,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { and, collection, doc, getDocs, query, where } from "firebase/firestore"
-import { auth, db } from "../fb/config"
+import { auth, clientId, db } from "../fb/config"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { useTheme } from "next-themes";
 import { createSheetFromTemplate } from "@/lib/sheets";
@@ -36,7 +36,6 @@ import { useToast } from "../ui/use-toast";
 import { FcGoogle } from "react-icons/fc";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { createUser } from "../fb/db";
-import keys from '@/keys.json'
 import { Logo } from "../ui/logo";
 import SSImage from "@/public/img/ss-signin.png"
 import Image from "next/image";
@@ -83,7 +82,7 @@ function SigninForm({ className }: React.ComponentProps<"form">) {
  
   function handleSignin() {
     setLoading("Authenticating...")
-    window.gapi.auth.authorize({client_id: keys.web.client_id, scope:"profile https://www.googleapis.com/auth/spreadsheets"}, (token:GoogleApiOAuth2TokenObject) =>{
+    window.gapi.auth.authorize({client_id: clientId, scope:"profile https://www.googleapis.com/auth/spreadsheets"}, (token:GoogleApiOAuth2TokenObject) =>{
       if(token.access_token){
         fetch("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token="+token.access_token).then(async (resp)=>{
           const data = await resp.json()

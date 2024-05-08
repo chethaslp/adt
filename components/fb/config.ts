@@ -9,9 +9,10 @@ const firebaseConfig: FirebaseOptions = {
   projectId: "projclp",
   storageBucket: "projclp.appspot.com",
   messagingSenderId: "650860249658",
-  appId: "1:650860249658:web:c12515c93716478d9f2b03"
+  appId: "1:650860249658:web:c12515c93716478d9f2b03",
 };
 
+export const clientId = "650860249658-51o53j912qiuveo0l7jvnashjiqvqs7r.apps.googleusercontent.com"
 export const apiKey = firebaseConfig.apiKey
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app)
