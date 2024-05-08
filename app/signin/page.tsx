@@ -44,11 +44,6 @@ export default function Home() {
       })
     }else console.log(token.error)
   }
-  
-  async function createSp(){
-    if(!accessToken || !user) return
-
-  }
 
   async function validateUser(user: User){
     const userData:UserType  = await getUser(user)

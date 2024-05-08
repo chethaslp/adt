@@ -32,6 +32,7 @@ import Loading from './loading';
 import { DocumentData, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import timeAgo from '@/lib/showtimeago'
 import { Separator } from '@/components/ui/separator';
+import { SigninDialog } from '@/components/dialog/signin-dialog';
 
 
 export default function Home() {
@@ -42,12 +43,13 @@ export default function Home() {
   const [userClses, setUserClses] = useState<QueryDocumentSnapshot<DocumentData, DocumentData>[] | null>()
   const [loading, setLoading] = useState(true)
   const [isNewSheetDialogOpen, setNewSheetDialogOpen] = useState(false)
+  const [isSigninDialogOpen, setSigninDialogOpen] = useState(false)
 
   const [flow, setFlow] = useState<"signing" | "noAuth" | "authComplete" | "loading">("noAuth")
   const s = useSearchParams()
 
   useEffect(()=>{
-    if(!user) redirect("/signin")
+    if(!user) return
     
     getUserClses(user).then((data)=>{
       setUserClses(data)
@@ -55,6 +57,8 @@ export default function Home() {
     })
    
   },[])
+
+  if(!user) return <SigninDialog open={true} setOpen={setSigninDialogOpen}/>
 
   return (loading)? <Loading msg='Getting your Classes...'/>:
     <div className='h-screen flex flex-col'>
@@ -75,9 +79,9 @@ export default function Home() {
             <CardContent className='mt-5'>
               {userClses?.length ==0? <div>No Sheets. Create one to continue.</div>:
               (userClses?.map((cls)=>{
-                return <Card className='cursor-pointer hover:bg-slate-900 transition-all flex justify-between items-center flex-col md:flex-row mb-2'>
+                return <Card key={cls.id} className='cursor-pointer hover:bg-slate-900 transition-all flex justify-between md:items-center flex-col md:flex-row mb-2'>
                   <div className='text md:text-lg p-3 flex flex-row items-center'> <SiGooglesheets size={20} className='mr-2'/> {(cls.data() as ClsType).title}</div>
-                  <div className='text-muted-foreground mr-0 mb-2 -mt-2 md:mb-0 md:mt-0 md:mr-5'>{timeAgo((cls.data().updatedAt as Timestamp).seconds *1000)}</div>
+                  <div className='text-muted-foreground text-xs md:text-sm mb-2 -mt-2 md:mb-0 md:mt-0 mr-5 flex justify-end'>Last Updated: {timeAgo((cls.data().updatedAt as Timestamp).seconds *1000)}</div>
                 </Card>
               }))}
               

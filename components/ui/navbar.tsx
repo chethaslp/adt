@@ -37,7 +37,7 @@ export function Navbar({ qName }: {qName?:string}) {
     return <div className='w-full backdrop-blur pr-5 pt-3 pl-5 pb-3'>
                 <div className="flex items-center justify-between gap-2 flex-row">
                     <div className="flex items-center flex-row gap-2">
-                        <Link href={"/"}><Logo size={"3xl"}/></Link>
+                        <Link href={"/"}><Logo className="text-3xl"/></Link>
                         {qName && <span className="text-lg ml-2">/&nbsp;{qName}</span>}
                     </div>
                     <div className='flex items-center justify-center gap-2'>

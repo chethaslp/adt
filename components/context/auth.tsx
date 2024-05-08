@@ -20,20 +20,22 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode} )
     async function loadGAPI(){
         const gapi = (await import('gapi-script')).gapi
         
-        gapi.load('client:auth2', async ()=>{
-            await gapi.client.init({
-            apiKey: apiKey,
-            clientId: keys.web.client_id,
-            scope: "https://www.googleapis.com/auth/spreadsheets" 
+        return new Promise((resolve, reject) => {
+            gapi.load('client:auth2', async ()=>{
+                gapi.client.init({
+                apiKey: apiKey,
+                clientId: keys.web.client_id,
+                scope: "https://www.googleapis.com/auth/spreadsheets"
+                }).then(()=> gapi.auth.init(()=> resolve(gapi)))
+                .catch((err)=> reject(err))
             })
-            localStorage.setItem("access_token",gapi.auth.getToken().access_token)
-        });
-        
-        return gapi
-    }
+          }).then((en)=> gapi)
+        }
 
     React.useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            const gapi = await loadGAPI()
+            window.gapi = gapi
             if (user) {
                 // const userData:UserDt = {
                 //     name:user.displayName || "",
@@ -43,7 +45,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode} )
                 // }
                 // setDoc(doc(db,"users",user.uid), userData)
                 setUser(user);
-                await loadGAPI()
+                localStorage.setItem("access_token",gapi.auth.getToken().access_token)
                     
             } else {
                 setUser(null);
