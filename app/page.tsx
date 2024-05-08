@@ -24,7 +24,6 @@ import { ClsType, UserType, createUser, getUser, getUserClses } from '@/componen
 import { NewSheetDialog } from '@/components/dialog/create-sheet';
 import { useEffect, useState } from 'react';
 import { HashLoader } from 'react-spinners'
-import keys from '@/keys.json'
 import { redirect, useSearchParams } from 'next/navigation';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useGoogleLogin } from '@react-oauth/google';
