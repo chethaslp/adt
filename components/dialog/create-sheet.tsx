@@ -78,6 +78,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
 
   const user = useAuthContext()
   const { toast } = useToast()
+  const { theme } = useTheme()
 
   const [admYear, setAdmYear] = React.useState<string>("####")
   const [batch, setBatch] = React.useState<string>("###")
@@ -109,7 +110,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
 
 
   return ((loading != "")?<div className="p-4 gap-5 flex items-center justify-center flex-row">
-  <HashLoader color={useTheme().theme=="dark"?"white":undefined}/>{loading}
+  <HashLoader color={theme=="dark"?"white":undefined}/>{loading}
   </div>:
     <form onSubmit={handleSubmit} className={cn("grid items-start gap-4", className)}>
       

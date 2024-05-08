@@ -47,7 +47,7 @@ export function SigninDialog({open, setOpen}:{open: boolean, setOpen: React.Disp
       <Logo className="text-6xl mb-5"/>
       <Card className="m-4">
         <CardHeader>
-          <CardTitle>Let's Get Started!</CardTitle>
+          <CardTitle>Let&apos;s Get Started!</CardTitle>
           <CardDescription>
             Signin with Google to continue.
           </CardDescription>
@@ -71,6 +71,7 @@ function SigninForm({ className }: React.ComponentProps<"form">) {
 
   const user = useAuthContext()
   const { toast } = useToast()
+  const { theme } = useTheme()
 
   const [admYear, setAdmYear] = React.useState<string>("####")
   const [batch, setBatch] = React.useState<string>("###")
@@ -109,7 +110,7 @@ function SigninForm({ className }: React.ComponentProps<"form">) {
     })}
 
   return ((loading != "")?<div className="p-4 gap-5 flex items-center justify-center flex-row">
-  <HashLoader color={useTheme().theme=="dark"?"white":undefined}/>{loading}
+  <HashLoader color={theme=="dark"?"white":undefined}/>{loading}
   </div>:
     <div className={cn("flex items-center justify-center flex-col gap-4", className)}>
       
