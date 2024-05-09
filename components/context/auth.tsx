@@ -5,7 +5,6 @@ import { apiKey, app, clientId } from '@/components/fb/config';
 import Loading from '@/app/loading';
 import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { GenericConverter, User as UserDt } from '@/lib/models';
-import { loadAuth2, loadAuth2WithProps, loadGapiInsideDOM, } from 'gapi-script'
 
 export const AuthContext = React.createContext<User | null>(null);
 
@@ -17,12 +16,36 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode} )
     const [user, setUser] = React.useState<User | null>(null);
     const [loading, setLoading] = React.useState(true);
 
+    async function loadGAPI(){
+        // if(window.gapi.auth) return window.gapi
+
+        const gapi = (await import('gapi-script')).gapi
+        
+        return new Promise((resolve, reject) => {
+            gapi.load('client:auth2', async ()=>{
+                gapi.client.init({
+                apiKey: apiKey,
+                clientId: clientId,
+                plugin_name:"adt",
+                scope: "https://www.googleapis.com/auth/spreadsheets"
+                }).then(()=> resolve(gapi))
+                .catch((err)=> reject(err))
+            })
+          }).then((en)=> gapi)
+        }
+
     React.useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            const gapi = await loadGapiInsideDOM();
-            await loadAuth2(gapi, clientId, '"https://www.googleapis.com/auth/spreadsheets"')
+            const gapi = await loadGAPI()
             window.gapi = gapi
             if (user) {
+                // const userData:UserDt = {
+                //     name:user.displayName || "",
+                //     email:user.email || "",
+                //     uid: user.uid,
+                //     dp: user.photoURL || "",
+                // }
+                // setDoc(doc(db,"users",user.uid), userData)
                 setUser(user);
                 localStorage.setItem("access_token",gapi.auth.getToken().access_token)
                     

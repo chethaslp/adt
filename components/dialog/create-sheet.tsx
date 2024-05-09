@@ -33,6 +33,7 @@ import { useTheme } from "next-themes";
 import { createSheetFromTemplate } from "@/lib/sheets";
 import { useAuthContext } from "../context/auth";
 import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
 
 export function NewSheetDialog({open, setOpen}:{open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>}) {
 
@@ -58,12 +59,12 @@ export function NewSheetDialog({open, setOpen}:{open: boolean, setOpen: React.Di
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Edit profile</DrawerTitle>
+          <DrawerTitle>Add Sheet</DrawerTitle>
           <DrawerDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
+          Fill the following details and we will fetch the Student Records for you.
           </DrawerDescription>
         </DrawerHeader>
-        <ProfileForm className="px-4" />
+        <ProfileForm className=""/>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -79,6 +80,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
   const user = useAuthContext()
   const { toast } = useToast()
   const { theme } = useTheme()
+  const router = useRouter()
 
   const [admYear, setAdmYear] = React.useState<string>("####")
   const [batch, setBatch] = React.useState<string>("###")
@@ -89,9 +91,10 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
 
   const handleSubmit = ()=>{
     if(!user) return
+
     setLoading("Getting Records...")
-    const q = query(collection(db,"/templates"), where("adm","==",admYear), where("batch","==",batch))
-    getDocs(q).then(async (qs)=>{
+
+    getDocs(query(collection(db,"/templates"), where("adm","==",admYear), where("batch","==",batch))).then(async (qs)=>{
       if(qs.empty){
         setError(true)
         setLoading("")
@@ -99,7 +102,10 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
         setLoading("Creating Sheet...")
         const d = qs.docs[0].data() as {adm: string, batch: string, id:string}
         createSheetFromTemplate({template:d, title: title || "Untitled Attendence Sheet", user: user, sub_name: subject}).then((doc)=>{
-          if(doc) toast({title:"Sheet Created.", description:title})
+          if(doc) {
+            toast({title:"Sheet Created.", description:title})
+            router.push("sheet/"+doc.spreadsheetId)
+          }
         })
       }
 
@@ -107,12 +113,10 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
     return false
   }
 
-
-
   return ((loading != "")?<div className="p-4 gap-5 flex items-center justify-center flex-row">
   <HashLoader color={theme=="light"? undefined:"white"}/>{loading}
   </div>:
-    <form onSubmit={handleSubmit} className={cn("grid items-start gap-4", className)}>
+    <form onSubmit={handleSubmit} className={cn("grid items-center justify-center gap-4", className)}>
       
       {(error)?<Card className="p-4 bg-red-500 gap-2 flex items-center flex-row text-sm">
         <FaExclamation size={30}/> Student Records of this batch has not been added yet.

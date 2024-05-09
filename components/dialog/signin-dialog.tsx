@@ -85,24 +85,25 @@ function SigninForm({ className }: React.ComponentProps<"form">) {
     setLoading("Authenticating...")
     window.gapi.auth.authorize({client_id: clientId, scope:"profile https://www.googleapis.com/auth/spreadsheets"}, (token:GoogleApiOAuth2TokenObject) =>{
       if(token.access_token){
+        // Check if user has approved GSheet access.
         fetch("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token="+token.access_token).then(async (resp)=>{
           const data = await resp.json()
-          console.log(data,data.scope.includes("https://www.googleapis.com/auth/spreadsheets"))
 
-          if(!data.scope.includes("https://www.googleapis.com/auth/spreadsheets")) {
+          if(data.scope.includes("https://www.googleapis.com/auth/spreadsheets")) {
+            localStorage.setItem("access_token", token.access_token)
+          
+          // Signing in Firebase with the Google oAuth AccessToken
+          signInWithCredential(auth, GoogleAuthProvider.credential(null,token.access_token))
+          .then((uc)=> createUser(uc.user))
+          .then(()=> location.reload())
+          }
+          else{
+            // If not approved, signout user and show error message.
             setError(true);
             gapi.auth.signOut()
             setLoading("")
           }
         })
-
-        if(!error) return
-        localStorage.setItem("access_token", token.access_token)
-        
-        // Signing in Firebase with the AccessToken
-        signInWithCredential(auth, GoogleAuthProvider.credential(null,token.access_token))
-        .then((uc)=> createUser(uc.user))
-        .then(()=> location.reload())
       }else {
         setLoading("")
         console.log(token.error)
@@ -110,7 +111,7 @@ function SigninForm({ className }: React.ComponentProps<"form">) {
     })}
 
   return ((loading != "")?<div className="p-4 gap-5 flex items-center justify-center flex-row">
-  <HashLoader color={theme=="dark"?"white":undefined}/>{loading}
+  <HashLoader color={theme=="light"? undefined:"white"}/>{loading}
   </div>:
     <div className={cn("flex items-center justify-center flex-col gap-4", className)}>
       
