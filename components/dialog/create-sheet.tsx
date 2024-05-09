@@ -64,8 +64,8 @@ export function NewSheetDialog({open, setOpen}:{open: boolean, setOpen: React.Di
           Fill the following details and we will fetch the Student Records for you.
           </DrawerDescription>
         </DrawerHeader>
-        <ProfileForm className=""/>
-        <DrawerFooter className="pt-2">
+        <ProfileForm/>
+        <DrawerFooter className="mb-8">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
           </DrawerClose>
@@ -98,6 +98,9 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
       if(qs.empty){
         setError(true)
         setLoading("")
+        setBatch("###")
+        setSubject("######")
+        setAdmYear("####")
       }else{
         setLoading("Creating Sheet...")
         setTitle(`${batch} (${admYear}) ${subject} - Attendance Sheet`)
@@ -119,11 +122,11 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
   </div>:
     <form onSubmit={handleSubmit} className={cn("grid items-center justify-center gap-4", className)}>
       
-      {(error)?<Card className="p-4 bg-red-500 gap-2 flex items-center flex-row text-sm">
-        <FaExclamation size={30}/> Student Records of this batch has not been added yet.
+      {(error)?<Card className="p-4 bg-red-500 gap-2 flex items-center flex-row text-sm mx-2">
+        <FaExclamation size={30}/> Student records of this batch has not been added yet.
       </Card>:null}
-      <div className="grid gap-3">
-        <Label htmlFor="username">Batch Info</Label>
+      <div className="grid gap-3 mx-2 items-center justify-center flex-row">
+        <Label className="mx-1">Batch Info</Label>
         <div className="grid gap-2 grid-flow-col">
           <Select required onValueChange={(v)=>setAdmYear(v)}>
             <SelectTrigger className="w-[180px]">
@@ -146,15 +149,15 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
           </Select>
         </div>  
       </div>
-      <div className="grid gap-2">
+      <div className="grid gap-2 mx-4">
         <Label htmlFor="subject">Subject</Label>
         <Input id="subject" required onChange={(e)=>setSubject(e.currentTarget.value)}/>
       </div>
-      <div className="grid gap-2">
+      <div className="grid gap-2 mx-4">
         <Label htmlFor="username">Sheet Name</Label>
         <Input id="title" required onChange={(e)=>setTitle(e.currentTarget.value)} value={`${batch} (${admYear}) ${subject} - Attendance Sheet`}/>
       </div>
-      <Button type="submit">Create Sheet</Button>
+      <Button type="submit" className="mx-4">Create Sheet</Button>
     </form>
   )
 }

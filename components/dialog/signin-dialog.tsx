@@ -116,7 +116,7 @@ function SigninForm({ className }: React.ComponentProps<"form">) {
     <div className={cn("flex items-center justify-center flex-col gap-4", className)}>
       
       {(error)?<Card className="p-4 bg-red-500 gap-2 m-3 flex items-center flex-row text-sm">
-        <FaExclamation size={30}/> Please Signin again and accept permissions for Google Sheets.
+        <FaExclamation size={30}/> Please signin again and accept permissions for Google Sheets.
       </Card>:null}
 
       <div className="flex w-fit p-2 cursor-pointer border rounded-md flex-row justify-center items-center hover:bg-slate-900 transition-all" onClick={handleSignin}>
