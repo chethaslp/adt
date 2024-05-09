@@ -17,6 +17,8 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode} )
     const [loading, setLoading] = React.useState(true);
 
     async function loadGAPI(){
+        if(window.gapi) return window.gapi
+        
         const gapi = (await import('gapi-script')).gapi
         
         return new Promise((resolve, reject) => {
