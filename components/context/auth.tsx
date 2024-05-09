@@ -57,7 +57,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode} )
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [auth]);
 
     return (
         <AuthContext.Provider value={ user }>

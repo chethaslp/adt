@@ -100,8 +100,9 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
         setLoading("")
       }else{
         setLoading("Creating Sheet...")
+        setTitle(`${batch} (${admYear}) ${subject} - Attendance Sheet`)
         const d = qs.docs[0].data() as {adm: string, batch: string, id:string}
-        createSheetFromTemplate({template:d, title: title || "Untitled Attendence Sheet", user: user, sub_name: subject}).then((doc)=>{
+        createSheetFromTemplate({template:d, title: title, user: user, sub_name: subject}).then((doc)=>{
           if(doc) {
             toast({title:"Sheet Created.", description:title})
             router.push("sheet/"+doc.spreadsheetId)

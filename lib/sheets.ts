@@ -10,7 +10,7 @@ let auth:{ token: string };
 if(!(typeof window === "undefined")) auth = { token: localStorage.getItem("access_token") || ""}
 
 // "1NZYHpq_NTMHUrka4kSj6kXYGGk5qCDR6lIuX03x7-nk"
-export async function createSheetFromTemplate({template, title, sub_name, user}: {template: {adm: string, batch: string, id:string}, title: string, user: User, sub_name : string }){
+export async function createSheetFromTemplate({template, title, sub_name, user}: {template: {adm: string, batch: string, id:string}, title?: string, user: User, sub_name : string }){
     /* Create a new GSheet and copy the contents from template to that sheet. */
     const doc = await GoogleSpreadsheet.createNewSpreadsheetDocument(auth, { title: title });
     const sourceDoc = new GoogleSpreadsheet(template.id,auth)
@@ -19,8 +19,8 @@ export async function createSheetFromTemplate({template, title, sub_name, user}:
     return sourceDoc.loadInfo()
     .then(()=>sourceDoc.sheetsByIndex[0].copyToSpreadsheet(doc.spreadsheetId))
     .then(() => doc.deleteSheet(0))
-    .then(()=> doc.sheetsByIndex[0].updateProperties({title:title}))
-    .then(()=> addCls(user, { adm: template.adm, title: title, sub_name:sub_name, batch: template.batch, sid: doc.spreadsheetId, templt_id: template.id}))
+    .then(()=> doc.sheetsByIndex[0].updateProperties({title:title || "Untitled Spreadsheet"}))
+    .then(()=> addCls(user, { adm: template.adm, title: title || "Untitled Spreadsheet", sub_name:sub_name, batch: template.batch, sid: doc.spreadsheetId, templt_id: template.id}))
     .then(()=> doc)
     
 }

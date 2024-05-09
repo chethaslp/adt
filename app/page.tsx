@@ -55,7 +55,7 @@ export default function Home() {
       setLoading(false)
     })
    
-  },[])
+  },[user])
 
   if(!user) return <SigninDialog open={true} setOpen={setSigninDialogOpen}/>
 

@@ -57,7 +57,7 @@ export default function Home({ params }: {params: {sid:string}}) {
       setLoading(false)
     })
    
-  },[])
+  },[user,router])
 
   return (loading)? <Loading msg='Getting Sheet...'/>:
     <div className='h-screen flex flex-col'>
