@@ -38,6 +38,7 @@ import { useRouter } from "next/navigation";
 export function NewSheetDialog({open, setOpen}:{open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>}) {
 
   const isDesktop = useMediaQuery("(min-width: 768px)")
+  const [error, setError] = React.useState(false)
 
   if (isDesktop) {
     return (
@@ -49,7 +50,7 @@ export function NewSheetDialog({open, setOpen}:{open: boolean, setOpen: React.Di
               Fill the following details and we will fetch the Student Records for you.
             </DialogDescription>
           </DialogHeader>
-          <ProfileForm />
+          <ProfileForm error={error} setError={setError}/>
         </DialogContent>
       </Dialog>
     )
@@ -64,8 +65,8 @@ export function NewSheetDialog({open, setOpen}:{open: boolean, setOpen: React.Di
           Fill the following details and we will fetch the Student Records for you.
           </DrawerDescription>
         </DrawerHeader>
-        <ProfileForm/>
-        <DrawerFooter className="mb-8">
+        <ProfileForm error={error} setError={setError}/>
+        <DrawerFooter className={error?"mb-12": "mb-8"}>
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
           </DrawerClose>
@@ -75,7 +76,7 @@ export function NewSheetDialog({open, setOpen}:{open: boolean, setOpen: React.Di
   )
 }
 
-function ProfileForm({ className }: React.ComponentProps<"form">) {
+function ProfileForm({ className, error, setError }: {className?:string, error:boolean , setError: React.Dispatch<React.SetStateAction<boolean>>}) {
 
   const user = useAuthContext()
   const { toast } = useToast()
@@ -87,7 +88,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
   const [subject, setSubject] = React.useState<string>("######")
   const [title, setTitle] = React.useState<string>()
   const [loading, setLoading] = React.useState("")
-  const [error, setError] = React.useState(false)
+
 
   const handleSubmit = ()=>{
     if(!user) return
