@@ -110,7 +110,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
 
 
   return ((loading != "")?<div className="p-4 gap-5 flex items-center justify-center flex-row">
-  <HashLoader color={theme=="dark"?"white":undefined}/>{loading}
+  <HashLoader color={theme=="light"? undefined:"white"}/>{loading}
   </div>:
     <form onSubmit={handleSubmit} className={cn("grid items-start gap-4", className)}>
       
