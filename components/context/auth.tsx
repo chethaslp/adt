@@ -17,7 +17,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode} )
     const [loading, setLoading] = React.useState(true);
 
     async function loadGAPI(){
-        if(window.gapi.auth) return window.gapi
+        // if(window.gapi.auth) return window.gapi
 
         const gapi = (await import('gapi-script')).gapi
         
@@ -26,6 +26,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode} )
                 gapi.client.init({
                 apiKey: apiKey,
                 clientId: clientId,
+                plugin_name:"adt",
                 scope: "https://www.googleapis.com/auth/spreadsheets"
                 }).then(()=> resolve(gapi))
                 .catch((err)=> reject(err))
