@@ -25,7 +25,7 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode} )
                 apiKey: apiKey,
                 clientId: clientId,
                 scope: "https://www.googleapis.com/auth/spreadsheets"
-                }).then(()=> gapi.auth.init(()=> resolve(gapi)))
+                }).then(()=> resolve(gapi))
                 .catch((err)=> reject(err))
             })
           }).then((en)=> gapi)
